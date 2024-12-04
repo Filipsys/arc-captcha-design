@@ -2,14 +2,14 @@ import { useState } from "react";
 import "./index.css";
 
 const colorDict = {
-    blue: "rgb(96, 165, 250)",
-    violet: "rgb(109, 40, 217)",
-    pink: "rgb(244, 114, 182)",
-    red: "rgb(220, 38, 38)",
-    green: "rgb(74, 222, 128)",
-    yellow: "rgb(253, 224, 71)",
-    lime: "rgb(54, 83, 20)",
-    black: "rgb(0, 0, 0)"
+    "blue": "rgb(96, 165, 250)",
+    "violet": "rgb(109, 40, 217)",
+    "pink": "rgb(244, 114, 182)",
+    "red": "rgb(220, 38, 38)",
+    "green": "rgb(74, 222, 128)",
+    "yellow": "rgb(253, 224, 71)",
+    "lime": "rgb(54, 83, 20)",
+    "black": "rgb(0, 0, 0)"
 }
 
 const fullBlack = [
@@ -32,7 +32,10 @@ const allZeros = [
     [0, 0, 0, 0, 0, 0, 0]
 ]
 
-const GridContainer = ({ squareMap, setSquareMap, colorMap, setColorMap, currentColor, gridSize }) => {
+const GridContainer = ({ squareMap, setSquareMap, colorMap, setColorMap, currentColor, gridSize }: { squareMap: number[][], setSquareMap: (arg: number[][]) => void, colorMap: string[][], setColorMap: (arg: string[][]) => void, currentColor: string, gridSize: number }) => {
+    // @ts-ignore
+    const tempS = colorDict[colorMap[rowIndex][squareIndex]];
+
     return (
         <>
             <div className="w-full flex justify-between">
@@ -46,12 +49,12 @@ const GridContainer = ({ squareMap, setSquareMap, colorMap, setColorMap, current
                      gridTemplateRows: `repeat(${gridSize}, minmax(0, 1fr))`
                  }}
             >
-                {squareMap.map((row, rowIndex) => (
+                {squareMap.map((row: number[], rowIndex: number) => (
                     <>
-                        {row.map((square, squareIndex) => (
+                        {row.map((square: number, squareIndex: number) => (
                             <div key={`square-row${rowIndex}-square${squareIndex}`}
                                  className="border-[0.5px] border-zinc-700 hover:border-zinc-500 transition-colors duration-300"
-                                 style={{backgroundColor: square == 1 ? colorDict[colorMap[rowIndex][squareIndex]] : "black"}}
+                                 style={{ backgroundColor: square == 1 ? tempS : "black" }}
                                  onClick={() => {
                                      const currentSquare = squareMap[rowIndex][squareIndex];
                                      const currentPrevColor = colorMap[rowIndex][squareIndex];
