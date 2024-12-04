@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./index.css";
 
-const colorDict = {
+const colorDict: { [key: string]: string } = {
     "blue": "rgb(96, 165, 250)",
     "violet": "rgb(109, 40, 217)",
     "pink": "rgb(244, 114, 182)",
@@ -32,10 +32,14 @@ const allZeros = [
     [0, 0, 0, 0, 0, 0, 0]
 ]
 
-const GridContainer = ({ squareMap, setSquareMap, colorMap, setColorMap, currentColor, gridSize }: { squareMap: number[][], setSquareMap: (arg: number[][]) => void, colorMap: string[][], setColorMap: (arg: string[][]) => void, currentColor: string, gridSize: number }) => {
-    // @ts-ignore
-    const tempS = colorDict[colorMap[rowIndex][squareIndex]];
-
+const GridContainer = ({ squareMap, setSquareMap, colorMap, setColorMap, currentColor, gridSize }: {
+    squareMap: number[][],
+    setSquareMap: (arg: number[][]) => void,
+    colorMap: string[][],
+    setColorMap: (arg: string[][]) => void,
+    currentColor: string,
+    gridSize: number
+}) => {
     return (
         <>
             <div className="w-full flex justify-between">
@@ -51,10 +55,10 @@ const GridContainer = ({ squareMap, setSquareMap, colorMap, setColorMap, current
             >
                 {squareMap.map((row: number[], rowIndex: number) => (
                     <>
-                        {row.map((square: number, squareIndex: number) => (
+                        {row.map((_square: number, squareIndex: number) => (
                             <div key={`square-row${rowIndex}-square${squareIndex}`}
                                  className="border-[0.5px] border-zinc-700 hover:border-zinc-500 transition-colors duration-300"
-                                 style={{ backgroundColor: square == 1 ? tempS : "black" }}
+                                 style={{ backgroundColor: colorDict[colorMap[rowIndex][squareIndex]] }}
                                  onClick={() => {
                                      const currentSquare = squareMap[rowIndex][squareIndex];
                                      const currentPrevColor = colorMap[rowIndex][squareIndex];
