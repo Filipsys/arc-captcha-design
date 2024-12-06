@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { ArcPrizeLogo } from "./assets/arc-prize-logo";
 import { DotGrid1 } from "./assets/svg-grids";
 import "./index.css";
