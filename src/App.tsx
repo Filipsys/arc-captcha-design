@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ArcPrizeLogo } from "./assets/arc-prize-logo";
+import { DotGrid1 } from "./assets/svg-grids";
 import "./index.css";
 
 const colorDict: { [key: string]: string } = {
@@ -11,6 +12,7 @@ const colorDict: { [key: string]: string } = {
   yellow: "rgb(253, 224, 71)",
   lime: "rgb(54, 83, 20)",
   black: "rgb(0, 0, 0)",
+  white: "rgb(255, 255, 255)",
 };
 
 const fullBlack = [
@@ -90,6 +92,7 @@ const GridContainer = ({
   currentColor: string;
   gridSize: number;
 }) => {
+
   return (
     <>
       <div className="w-full flex justify-between">
@@ -100,7 +103,7 @@ const GridContainer = ({
       </div>
 
       <div
-        className="size-36 grid"
+        className="size-36 grid gap-[1px] select-none"
         style={{
           gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`,
           gridTemplateRows: `repeat(${gridSize}, minmax(0, 1fr))`,
@@ -111,7 +114,7 @@ const GridContainer = ({
             {row.map((_square: number, squareIndex: number) => (
               <div
                 key={`square-row${rowIndex}-square${squareIndex}`}
-                className="border-[0.5px] border-zinc-700 hover:border-zinc-500 transition-colors duration-300"
+                className="border-zinc-600 hover:border-[1px] cursor-pointer transition-colors duration-[200]"
                 style={{
                   backgroundColor: colorDict[colorMap[rowIndex][squareIndex]],
                 }}
@@ -143,13 +146,50 @@ function App() {
   const [drawColor, setDrawColor] = useState("blue");
   const [squareMap, setSquareMap] = useState(allZeros);
   const [colorMap, setColorMap] = useState(fullBlack);
+  const pleaseComply = useRef(null);
   const defaultMapSize = 7;
 
   return (
     <div className="h-screen flex items-center justify-center bg-black text-gray-400 font-mono text-xs">
-      <div className="flex gap-3">
-        <div className="flex flex-col gap-3">
-          <div className="flex flex-col h-fit items-center gap-2 bg-zinc-900 p-3 border-[1px] border-zinc-700">
+      <div className="flex gap-3 relative">
+      <div className="bg-zinc-950 p-3 border-[1px] border-zinc-900 flex items-center z-10">
+          <p
+            className="text-zinc-700 font-martian tracking-[0.2em] font-bold italic"
+            ref={pleaseComply}
+            style={{
+              writingMode: "vertical-lr",
+              rotate: "180deg",
+            }}
+          >
+            AGI CAPTCHA IN PROGRESS. PLEASE COMPLY<span className="animate-blink">.</span>
+          </p>
+        </div>
+        <div className="absolute -top-1/3 -left-2/3 opacity-10 scale-125">
+          <div
+            className="absolute *:size-[500px]"
+            style={{
+              maskImage: "url(radial-mask.svg)",
+              maskPosition: "center",
+            }}
+          >
+            <DotGrid1 />
+          </div>
+        </div>
+
+        <div className="absolute bottom-1/2 right-2/3 opacity-10 scale-[2]">
+          <div
+            className="absolute *:size-[500px]"
+            style={{
+              maskImage: "url(radial-mask.svg)",
+              maskPosition: "center",
+            }}
+          >
+            <DotGrid1 />
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-3 z-10">
+          <div className="flex flex-col h-fit items-center gap-2 bg-zinc-950 p-3 border-[1px] border-zinc-900">
             <div className="w-full flex justify-between">
               <p>Input</p>
               <p className="text-zinc-500">
@@ -157,7 +197,7 @@ function App() {
               </p>
             </div>
 
-            <div className="size-36 grid grid-cols-7 grid-rows-7">
+            <div className="size-36 grid grid-cols-7 grid-rows-7 gap-[1px] select-none">
               {Array.from({ length: 49 }).map((_, index) => (
                 <div
                   key={`square-one-${index}`}
@@ -165,9 +205,9 @@ function App() {
                     backgroundColor:
                       defaultMapColors[0][Math.floor(index / defaultMapSize)][
                         index % defaultMapSize
-                      ],
+                      ]
                   }}
-                  className="border-[0.5px] border-zinc-700"
+                  className=""
                 />
               ))}
             </div>
@@ -196,13 +236,13 @@ function App() {
             />
           </div>
 
-          <div className="h-full w-full flex items-center justify-center bg-zinc-900 p-3 border-[1px] border-zinc-700 *:h-5 *:w-fit">
+          <div className="h-full w-full flex items-center justify-center bg-zinc-950 p-3 border-[1px] border-zinc-900 *:h-5 *:w-fit">
             <ArcPrizeLogo />
           </div>
         </div>
 
-        <div className="h-full w-80 flex gap-3 align-top flex-col">
-          <div className="flex flex-col gap-3 bg-zinc-900 p-3 border-[1px] border-zinc-700">
+        <div className="h-full w-80 flex gap-3 align-top flex-col z-10">
+          <div className="flex flex-col gap-3 bg-zinc-950 p-3 border-[1px] border-zinc-900">
             <p>1. Configure your output grid:</p>
 
             <div className="flex gap-2">
@@ -226,7 +266,7 @@ function App() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 bg-zinc-900 p-3 border-[1px] border-zinc-700">
+          <div className="flex flex-col gap-3 bg-zinc-950 p-3 border-[1px] border-zinc-900">
             <p>2. Click to select a colour:</p>
 
             <div className="flex gap-2 *:size-6 *:border-[1px] *:border-zinc-500 *:cursor-pointer">
@@ -342,10 +382,24 @@ function App() {
                   borderColor: drawColor == "black" ? "rgb(255 255 255)" : "",
                 }}
               />
+              <div
+                className="bg-white"
+                onClick={() => {
+                  if (drawColor == "white") {
+                    setDrawColor("");
+                  } else {
+                    setDrawColor("white");
+                  }
+                }}
+                style={{
+                  borderBottomWidth: drawColor == "white" ? "4px" : "0.5px",
+                  borderColor: drawColor == "white" ? "rgb(0 0 0 0.5)" : "",
+                }}
+              />
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 bg-zinc-900 p-3 border-[1px] border-zinc-700">
+          <div className="flex flex-col gap-3 bg-zinc-950 p-3 border-[1px] border-zinc-900">
             <p>3. Complete captcha:</p>
 
             <button className="p-1 px-2 bg-zinc-800 hover:bg-zinc-700 transition-colors duration-300">
@@ -353,9 +407,11 @@ function App() {
             </button>
           </div>
 
-          <div className="flex flex-col gap-3 bg-zinc-900 p-3 border-[1px] border-zinc-700">
-            <p className="font-bold underline underline-offset-4 text-blue-400">
-              What is this?
+          <div className="flex flex-col gap-3 bg-zinc-950 p-3 border-[1px] border-zinc-900 z-10">
+            <p className="text-blue-400 font-martian tracking-widest font-bold">
+              //<span className="px-[2px] font-light">·</span>What
+              <span className="px-[2px] font-light">·</span>is
+              <span className="px-[2px] font-light">·</span>this?
             </p>
             <p>
               Most AI benchmarks measure skill. But skill is <u>not</u>{" "}
@@ -368,6 +424,8 @@ function App() {
             </p>
           </div>
         </div>
+
+        
       </div>
     </div>
   );
